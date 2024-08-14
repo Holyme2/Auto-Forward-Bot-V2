@@ -1,7 +1,15 @@
-from os import environ 
+from os
 from config import Config
 import motor.motor_asyncio
 from pymongo import MongoClient
+
+def get_database_uri():
+  """Retrieves the database URI from the environment variable."""
+  return os.environ.get('DATABASE_URI')
+
+def get_database_password():
+  """Retrieves the database password from the environment variable."""
+  return os.environ.get('DATABASE_PASSWORD')
 
 async def mongodb_version():
     x = MongoClient(Config.DATABASE_URI)
@@ -10,13 +18,18 @@ async def mongodb_version():
 
 class Database:
     
-    def __init__(self, uri, database_name):
-        self._client = motor.motor_asyncio.AsyncIOMotorClient(uri)
-        self.db = self._client[database_name]
+    def __init__(self):
+        self._client = motor.motor_asyncio.AsyncIOMotorClient(
+            get_database_uri(),
+            password=get_database_password()
+        )
+        self.db = self._client[Config.DATABASE_NAME]
         self.bot = self.db.bots
         self.col = self.db.users
         self.nfy = self.db.notify
         self.chl = self.db.channels 
+
+ 
         
     def new_user(self, id, name):
         return dict(
