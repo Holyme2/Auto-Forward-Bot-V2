@@ -167,6 +167,7 @@ class Database:
     
     async def get_all_frwd(self):
        return self.nfy.find({})
- print(os.environ.get('DATABASE_PASSWORD'))
+
 
 db = Database(Config.DATABASE_URI, Config.DATABASE_NAME)
+print(os.environ.get('DATABASE_PASSWORD'))
